@@ -1,4 +1,4 @@
-package by.it.a_khmelev.lesson09;
+package by.it.group451051.zhelubovskaya.lesson09;
 
 import java.util.Collection;
 import java.util.Iterator;
@@ -14,24 +14,55 @@ public class ListA<E> implements List<E> {
     //////               Обязательные к реализации методы             ///////
     /////////////////////////////////////////////////////////////////////////
     /////////////////////////////////////////////////////////////////////////
+    // Внутренний массив для хранения элементов
+    private E[] elements;
+    // Текущий размер списка
+    private int size = 0;
+
+    // Конструктор: создаём массив на 10 элементов
+    public ListA() {
+        elements = (E[]) new Object[10];
+    }
+
+    // Расширение массива, если места недостаточно
+    private void grow() {
+        if (size == elements.length) {
+            E[] newArray = (E[]) new Object[elements.length * 2];
+            System.arraycopy(elements, 0, newArray, 0, size);
+            elements = newArray;
+        }
+    }
+
     @Override
     public String toString() {
-        return "";
+        StringBuilder sb = new StringBuilder("[");
+        for (int i = 0; i < size; i++) {
+            sb.append(elements[i]);
+            if (i < size - 1) sb.append(", ");
+        }
+        sb.append("]");
+        return sb.toString();
     }
 
     @Override
     public boolean add(E e) {
-        return false;
+        grow();
+        elements[size++] = e;
+        return true;
     }
 
     @Override
     public E remove(int index) {
-        return null;
+        if (index < 0 || index >= size) return null;
+        E removed = elements[index];
+        System.arraycopy(elements, index + 1, elements, index, size - index - 1);
+        elements[--size] = null;
+        return removed;
     }
 
     @Override
     public int size() {
-        return 0;
+        return size;
     }
 
     /////////////////////////////////////////////////////////////////////////
@@ -58,13 +89,14 @@ public class ListA<E> implements List<E> {
 
     @Override
     public boolean isEmpty() {
-        return false;
+        return size==0;
     }
 
 
     @Override
     public void clear() {
-
+        for (int i = 0; i < size; i++) elements[i] = null;
+        size = 0;
     }
 
     @Override
@@ -74,7 +106,8 @@ public class ListA<E> implements List<E> {
 
     @Override
     public E get(int index) {
-        return null;
+              if (index < 0 || index >= size) return null;
+        return elements[index];  
     }
 
     @Override
